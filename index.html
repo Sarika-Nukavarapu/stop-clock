@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stopwatch / Clock</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      text-align: center;
+      padding-top: 50px;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    .clock, .stopwatch {
+      font-size: 2em;
+      margin: 20px auto;
+      padding: 15px;
+      background: white;
+      display: inline-block;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .start { background-color: #4CAF50; color: white; }
+    .stop { background-color: #f44336; color: white; }
+    .reset { background-color: #2196F3; color: white; }
+  </style>
+</head>
+<body>
+
+  <h1>Stopwatch / Clock</h1>
+
+  <div class="clock" id="clock">00:00:00</div>
+
+  <div class="stopwatch" id="stopwatch">00:00:00</div>
+
+  <div>
+    <button class="start" onclick="startStopwatch()">Start</button>
+    <button class="stop" onclick="stopStopwatch()">Stop</button>
+    <button class="reset" onclick="resetStopwatch()">Reset</button>
+  </div>
+
+  <script>
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-GB'); // HH:MM:SS
+      document.getElementById('clock').textContent = timeString;
+    }
+    setInterval(updateClock, 1000);
+    updateClock(); // initial call
+
+    // Stopwatch
+    let startTime, elapsedTime = 0, timerInterval;
+
+    function timeToString(time) {
+      const hrs = Math.floor(time / 3600000);
+      const mins = Math.floor((time % 3600000) / 60000);
+      const secs = Math.floor((time % 60000) / 1000);
+      return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    }
+
+    function pad(number) {
+      return number.toString().padStart(2, '0');
+    }
+
+    function startStopwatch() {
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(() => {
+        elapsedTime = Date.now() - startTime;
+        document.getElementById('stopwatch').textContent = timeToString(elapsedTime);
+      }, 1000);
+    }
+
+    function stopStopwatch() {
+      clearInterval(timerInterval);
+    }
+
+    function resetStopwatch() {
+      clearInterval(timerInterval);
+      elapsedTime = 0;
+      document.getElementById('stopwatch').textContent = "00:00:00";
+    }
+  </script>
+
+</body>
+</html>
