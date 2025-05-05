@@ -53,27 +53,30 @@
     // Clock
     function updateClock() {
       const now = new Date();
-      const timeString = now.toLocaleTimeString('en-GB'); // HH:MM:SS
+      const timeString = now.toLocaleTimeString('en-GB');
       document.getElementById('clock').textContent = timeString;
     }
     setInterval(updateClock, 1000);
-    updateClock(); // initial call
+    updateClock();
 
     // Stopwatch
-    let startTime, elapsedTime = 0, timerInterval;
-
-    function timeToString(time) {
-      const hrs = Math.floor(time / 3600000);
-      const mins = Math.floor((time % 3600000) / 60000);
-      const secs = Math.floor((time % 60000) / 1000);
-      return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-    }
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval = null;
 
     function pad(number) {
       return number.toString().padStart(2, '0');
     }
 
+    function timeToString(time) {
+      const hrs = Math.floor(time / 3600000);
+      const mins = Math.floor((time % 3600000) / 60000);
+      const secs = Math.floor((time % 60000) / 1000);
+      return ${pad(hrs)}:${pad(mins)}:${pad(secs)};
+    }
+
     function startStopwatch() {
+      if (timerInterval) return; // Prevent multiple intervals
       startTime = Date.now() - elapsedTime;
       timerInterval = setInterval(() => {
         elapsedTime = Date.now() - startTime;
@@ -83,10 +86,12 @@
 
     function stopStopwatch() {
       clearInterval(timerInterval);
+      timerInterval = null;
     }
 
     function resetStopwatch() {
       clearInterval(timerInterval);
+      timerInterval = null;
       elapsedTime = 0;
       document.getElementById('stopwatch').textContent = "00:00:00";
     }
